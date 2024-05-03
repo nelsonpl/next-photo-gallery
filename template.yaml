@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  UploadImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: build/uploadImage.handler
+      Runtime: nodejs20.x
+      Timeout: 300
+      Policies:
+        - AmazonS3FullAccess
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref ImageBucket
+      Events:
+        UploadImageApi:
+          Type: Api
+          Properties:
+            Path: /uploadImage
+            Method: post
+
+  ViewImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: build/viewImage.handler
+      Runtime: nodejs20.x
+      Timeout: 300
+      Policies:
+        - AmazonS3ReadOnlyAccess
+      Events:
+        ViewImageApi:
+          Type: Api
+          Properties:
+            Path: /viewImage
+            Method: get
+
+  DeleteImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: build/deleteImage.handler
+      Runtime: nodejs20.x
+      Timeout: 300
+      Policies:
+        - AmazonS3FullAccess
+      Events:
+        DeleteImageApi:
+          Type: Api
+          Properties:
+            Path: /deleteImage
+            Method: delete
+
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: nelson-photo-gallery-bucket
+
+Outputs:
+  ImageBucketName:
+    Value: !Ref ImageBucket
+    Description: Nome do bucket S3 para armazenamento de imagens

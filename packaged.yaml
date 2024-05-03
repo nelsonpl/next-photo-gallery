@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  UploadImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: build/uploadImage.handler
+      Runtime: nodejs20.x
+      Policies:
+      - AmazonS3FullAccess
+      Environment:
+        Variables:
+          BUCKET_NAME:
+            Ref: ImageBucket
+      Events:
+        UploadImageApi:
+          Type: Api
+          Properties:
+            Path: /uploadImage
+            Method: post
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/bbc33fc5686ee5057a9b6bcd4889a2ea
+    Metadata:
+      SamResourceId: UploadImageFunction
+  ViewImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_functions/viewImage.handler
+      Runtime: nodejs20.x
+      Policies:
+      - AmazonS3ReadOnlyAccess
+      Events:
+        ViewImageApi:
+          Type: Api
+          Properties:
+            Path: /viewImage
+            Method: get
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/bbc33fc5686ee5057a9b6bcd4889a2ea
+    Metadata:
+      SamResourceId: ViewImageFunction
+  DeleteImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_functions/deleteImage.handler
+      Runtime: nodejs20.x
+      Policies:
+      - AmazonS3FullAccess
+      Events:
+        DeleteImageApi:
+          Type: Api
+          Properties:
+            Path: /deleteImage
+            Method: delete
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/bbc33fc5686ee5057a9b6bcd4889a2ea
+    Metadata:
+      SamResourceId: DeleteImageFunction
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: nelson-photo-gallery-bucket
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256
+      AccessControl: Private
+    Metadata:
+      SamResourceId: ImageBucket
+Outputs:
+  ImageBucketName:
+    Value:
+      Ref: ImageBucket
+    Description: Nome do bucket S3 para armazenamento de imagens
