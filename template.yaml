@@ -12,7 +12,7 @@ Resources:
         - AmazonS3FullAccess
       Environment:
         Variables:
-          BUCKET_NAME: !Ref ImageBucket
+          BUCKET_NAME: nelson-photo-gallery-bucket
       Events:
         UploadImageApi:
           Type: Api
@@ -57,5 +57,5 @@ Resources:
 
 Outputs:
   ImageBucketName:
-    Value: !Ref ImageBucket
+    Value: nelson-photo-gallery-bucket
     Description: Nome do bucket S3 para armazenamento de imagens
