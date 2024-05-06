@@ -13,14 +13,13 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       };
     }
 
-    const bucketName = 'nelson-images-bucket';
+    const bucketName = 'nelson-images-2-bucket';
 
     const params: AWS.S3.GetObjectRequest = {
       Bucket: bucketName,
       Key: imageName,
     };
 
-    // Gerar a URL assinada
     const signedUrl = await s3.getSignedUrlPromise('getObject', params);
 
     return {

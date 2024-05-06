@@ -12,7 +12,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
-        const { title, description, uploadAt, imageUrl } = JSON.parse(event.body);
+        const { title, description, uploadAt, imageFileName } = JSON.parse(event.body);
 
         if (!title || !description || !uploadAt) {
             return {
@@ -24,11 +24,11 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
         const params: AWS.DynamoDB.DocumentClient.PutItemInput = {
             TableName: 'nelson-photo-gallery-table',
             Item: {
-                id: context.awsRequestId,
+                photoId: context.awsRequestId,
                 title,
                 description,
-                imageUrl,
-                uploadAt,
+                imageFileName,
+                uploadAt
             },
         };
 

@@ -18,7 +18,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     const imageBuffer = Buffer.from(base64Image, 'base64');
 
     const imageName = `${Date.now()}.png`;
-    const bucketName = 'nelson-images-bucket';
+    const bucketName = 'nelson-images-2-bucket';
 
     const params: AWS.S3.Types.PutObjectRequest = {
       Bucket: bucketName,

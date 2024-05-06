@@ -17,7 +17,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
     const filename = `${Date.now()}-${data.filename}`;
 
-    const BUCKET = 'nelson-images-bucket';
+    const BUCKET = 'nelson-images-2-bucket';
 
     await s3.putObject({ Bucket: BUCKET, Key: filename, Body: data.content, ContentType: data.contentType }).promise();
 
