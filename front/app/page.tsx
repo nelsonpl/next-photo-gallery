@@ -2,7 +2,7 @@ import PhotoList from './photoList';
 interface Photo {
   uploadAt: string;
   photoId: string;
-  imageFileName: string;
+  imageUrl: string;
   description: string;
   title: string;
 }
@@ -14,8 +14,12 @@ const Page: React.FC = async () => {
   const response = await fetch(`${api}/listPhoto`);
   const photos: Photo[] = (await response.json()).photos;
 
+  console.log('photos', photos)
+
   return (
-    <PhotoList photos={photos} />
+    <div>
+      <PhotoList photos={photos} />
+    </div>
   );
 };
 

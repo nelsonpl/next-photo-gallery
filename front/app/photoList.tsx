@@ -1,9 +1,7 @@
-import Photo from './photo';
-
 interface Photo {
   uploadAt: string;
   photoId: string;
-  imageFileName: string;
+  imageUrl: string;
   description: string;
   title: string;
 }
@@ -21,7 +19,7 @@ const PhotoList: React.FC<PhotoListParams> = (params) => {
           <li key={photo.photoId}>
             <h2>{photo.title}</h2>
             <p>{photo.description}</p>
-            <Photo imageName={photo.imageFileName} />
+            <img src={photo.imageUrl} alt="" />
           </li>
         ))}
       </ul>

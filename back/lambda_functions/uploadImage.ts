@@ -21,14 +21,22 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
     await s3.putObject({ Bucket: BUCKET, Key: filename, Body: data.content, ContentType: data.contentType }).promise();
 
+    const params: AWS.S3.GetObjectRequest = {
+      Bucket: BUCKET,
+      Key: filename,
+    };
+
+    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ link: `https://${BUCKET}.s3.amazonaws.com/${filename}` }),
+      body: JSON.stringify({ imageUrl: signedUrl }),
       headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     };
+
   } catch (err) {
     console.error(err);
     return {

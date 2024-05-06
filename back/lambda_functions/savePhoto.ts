@@ -12,7 +12,14 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
-        const { title, description, uploadAt, imageFileName } = JSON.parse(event.body);
+        console.log('event.body:', event.body)
+        const decodedBody = Buffer.from(event.body, 'base64').toString();
+        console.log('decodedBody:', decodedBody)
+
+        const requestBody = JSON.parse(decodedBody);
+        console.log('requestBody:', requestBody)
+
+        const { title, description, uploadAt, imageUrl } = requestBody;
 
         if (!title || !description || !uploadAt) {
             return {
@@ -27,7 +34,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
                 photoId: context.awsRequestId,
                 title,
                 description,
-                imageFileName,
+                imageUrl,
                 uploadAt
             },
         };
