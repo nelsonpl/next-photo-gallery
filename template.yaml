@@ -1,5 +1,10 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Api:
+    BinaryMediaTypes:
+      - "*~1*"
 
 Resources:
   UploadImageFunction:
@@ -12,7 +17,7 @@ Resources:
         - AmazonS3FullAccess
       Environment:
         Variables:
-          BUCKET_NAME: nelson-photo-gallery-bucket
+          BUCKET_NAME: nelson-images-bucket
       Events:
         UploadImageApi:
           Type: Api
@@ -53,9 +58,9 @@ Resources:
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: nelson-photo-gallery-bucket
+      BucketName: nelson-images-bucket
 
 Outputs:
   ImageBucketName:
-    Value: nelson-photo-gallery-bucket
+    Value: nelson-images-bucket
     Description: Nome do bucket S3 para armazenamento de imagens

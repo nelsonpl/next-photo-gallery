@@ -13,7 +13,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       };
     }
 
-    const bucketName = 'nelson-photo-gallery-bucket';
+    const bucketName = 'nelson-images-bucket';
 
     const params: AWS.S3.GetObjectRequest = {
       Bucket: bucketName,
