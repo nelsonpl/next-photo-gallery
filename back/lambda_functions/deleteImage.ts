@@ -34,6 +34,10 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     return {
       statusCode: 200,
       body: JSON.stringify({ imageUrl }),
+      headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      }
     };
   } catch (error) {
     console.error('Erro ao fazer upload da imagem:', error);

@@ -23,7 +23,11 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ link: `https://${BUCKET}.s3.amazonaws.com/${filename}` })
+      body: JSON.stringify({ link: `https://${BUCKET}.s3.amazonaws.com/${filename}` }),
+      headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      }
     };
   } catch (err) {
     console.error(err);

@@ -37,6 +37,10 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Metadados da foto salvos com sucesso' }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
         };
     } catch (error) {
         console.error('Erro ao salvar os metadados da foto:', error);

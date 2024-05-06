@@ -15,3 +15,4 @@ yarn tsc
 sam package --template-file template.yaml --output-template-file packaged.yaml
 
 sam deploy --template-file packaged.yaml --stack-name nelson-functions --capabilities CAPABILITY_IAM
+

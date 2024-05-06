@@ -32,7 +32,11 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
                 photos: data.Items,
                 count: dataCount.Count,
                 nextStartKey
-            })
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
         };
     } catch (error) {
         console.error('Erro ao listar as fotos:', error);
