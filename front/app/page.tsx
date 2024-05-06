@@ -1,4 +1,7 @@
+import React from 'react';
 import PhotoList from './photoList';
+import FormUploadPhoto from './formUploadPhoto';
+
 interface Photo {
   uploadAt: string;
   photoId: string;
@@ -7,17 +10,15 @@ interface Photo {
   title: string;
 }
 
-const api = "https://xwf3amzv87.execute-api.us-east-2.amazonaws.com/Prod"
-
 const Page: React.FC = async () => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
 
-  const response = await fetch(`${api}/listPhoto`);
+  const response = await fetch(`${apiUrl}/listPhoto`);
   const photos: Photo[] = (await response.json()).photos;
-
-  console.log('photos', photos)
 
   return (
     <div>
+      <FormUploadPhoto />
       <PhotoList photos={photos} />
     </div>
   );

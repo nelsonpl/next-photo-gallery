@@ -2,6 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 
 const s3 = new AWS.S3();
+const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
@@ -13,10 +14,10 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       };
     }
 
-    const bucketName = 'nelson-images-2-bucket';
+    const bucketName = 'nelson-images-3-bucket';
 
     const params: AWS.S3.GetObjectRequest = {
-      Bucket: bucketName,
+      Bucket: BUCKET_NAME,
       Key: imageName,
     };
 

@@ -2,14 +2,13 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import * as AWS from 'aws-sdk';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const TABLE_NAME = process.env.TABLE_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
     try {
-        const limit = parseInt(event.queryStringParameters?.limit || '20', 10);
 
         const params: AWS.DynamoDB.DocumentClient.ScanInput = {
-            TableName: 'nelson-photo-gallery-table',
-            Limit: limit,
+            TableName: TABLE_NAME,
         };
 
         const data = await dynamoDB.scan(params).promise();
@@ -19,18 +18,10 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             nextStartKey = encodeURIComponent(JSON.stringify(data.LastEvaluatedKey));
         }
 
-        const paramsCount: AWS.DynamoDB.DocumentClient.ScanInput = {
-            TableName: 'nelson-photo-gallery-table',
-            Select: 'COUNT'
-        };
-
-        const dataCount = await dynamoDB.scan(paramsCount).promise();
-
         return {
             statusCode: 200,
             body: JSON.stringify({
                 photos: data.Items,
-                count: dataCount.Count,
                 nextStartKey
             }),
             headers: {

@@ -1,11 +1,9 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-
 Globals:
   Api:
     BinaryMediaTypes:
-      - "*~1*"
-
+    - '*~1*'
 Resources:
   UploadImageFunction:
     Type: AWS::Serverless::Function
@@ -14,7 +12,7 @@ Resources:
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
-        - AmazonS3FullAccess
+      - AmazonS3FullAccess
       Environment:
         Variables:
           BUCKET_NAME: nelson-fullstackassignment-bucket
@@ -24,7 +22,9 @@ Resources:
           Properties:
             Path: /uploadImage
             Method: post
-
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/a5200c105e97ab2e4f267309a482a7a2
+    Metadata:
+      SamResourceId: UploadImageFunction
   ViewImageFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -32,7 +32,7 @@ Resources:
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
-        - AmazonS3ReadOnlyAccess
+      - AmazonS3ReadOnlyAccess
       Environment:
         Variables:
           BUCKET_NAME: nelson-fullstackassignment-bucket
@@ -42,7 +42,9 @@ Resources:
           Properties:
             Path: /viewImage
             Method: get
-
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/a5200c105e97ab2e4f267309a482a7a2
+    Metadata:
+      SamResourceId: ViewImageFunction
   DeleteImageFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -50,7 +52,7 @@ Resources:
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
-        - AmazonS3FullAccess
+      - AmazonS3FullAccess
       Environment:
         Variables:
           BUCKET_NAME: nelson-fullstackassignment-bucket
@@ -60,7 +62,9 @@ Resources:
           Properties:
             Path: /deleteImage
             Method: delete
-
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/a5200c105e97ab2e4f267309a482a7a2
+    Metadata:
+      SamResourceId: DeleteImageFunction
   SavePhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -68,7 +72,7 @@ Resources:
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
-        - AmazonDynamoDBFullAccess 
+      - AmazonDynamoDBFullAccess
       Environment:
         Variables:
           TABLE_NAME: nelson-fullstackassignment-table-photos
@@ -79,7 +83,9 @@ Resources:
           Properties:
             Path: /savePhoto
             Method: post
-
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/a5200c105e97ab2e4f267309a482a7a2
+    Metadata:
+      SamResourceId: SavePhotoFunction
   ListPhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -87,7 +93,7 @@ Resources:
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
-        - AmazonDynamoDBFullAccess 
+      - AmazonDynamoDBFullAccess
       Environment:
         Variables:
           TABLE_NAME: nelson-fullstackassignment-table-photos
@@ -97,38 +103,31 @@ Resources:
           Properties:
             Path: /listPhoto
             Method: get
-  
+      CodeUri: s3://aws-sam-cli-managed-default-samclisourcebucket-esgfpyjwudyk/a5200c105e97ab2e4f267309a482a7a2
+    Metadata:
+      SamResourceId: ListPhotoFunction
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: nelson-fullstackassignment-bucket
       AccessControl: PublicRead
-  
-  # BucketPolicy:
-  #   Type: AWS::S3::BucketPolicy
-  #   Properties:
-  #     Bucket: !Ref ImageBucket
-  #     PolicyDocument:
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal: '*'
-  #           Action: s3:GetObject
-  #           Resource: !Sub "arn:aws:s3:::${ImageBucket}/*"
-
+    Metadata:
+      SamResourceId: ImageBucket
   PhotosTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: nelson-fullstackassignment-table-photos
       AttributeDefinitions:
-        - AttributeName: photoId
-          AttributeType: S
+      - AttributeName: photoId
+        AttributeType: S
       KeySchema:
-        - AttributeName: photoId
-          KeyType: HASH
+      - AttributeName: photoId
+        KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-
+    Metadata:
+      SamResourceId: PhotosTable
 Outputs:
   ImageBucketName:
     Value: nelson-fullstackassignment-bucket

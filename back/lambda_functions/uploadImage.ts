@@ -3,6 +3,7 @@ import * as AWS from 'aws-sdk';
 import parser from 'lambda-multipart-parser-v2';
 
 const s3 = new AWS.S3();
+const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
@@ -17,20 +18,17 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
     const filename = `${Date.now()}-${data.filename}`;
 
-    const BUCKET = 'nelson-images-2-bucket';
-
-    await s3.putObject({ Bucket: BUCKET, Key: filename, Body: data.content, ContentType: data.contentType }).promise();
-
-    const params: AWS.S3.GetObjectRequest = {
-      Bucket: BUCKET,
+    await s3.putObject({
+      Bucket: BUCKET_NAME,
       Key: filename,
-    };
-
-    const signedUrl = await s3.getSignedUrlPromise('getObject', params);
+      Body: data.content,
+      ContentType: data.contentType,
+      ACL: 'public-read'
+    }).promise();
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ imageUrl: signedUrl }),
+      body: JSON.stringify({ imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/${filename}` }),
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'

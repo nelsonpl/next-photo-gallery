@@ -2,6 +2,8 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const TABLE_NAME = process.env.TABLE_NAME || '';
+const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
     try {
@@ -12,14 +14,11 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
-        console.log('event.body:', event.body)
         const decodedBody = Buffer.from(event.body, 'base64').toString();
-        console.log('decodedBody:', decodedBody)
 
         const requestBody = JSON.parse(decodedBody);
-        console.log('requestBody:', requestBody)
 
-        const { title, description, uploadAt, imageUrl } = requestBody;
+        const { title, description, uploadAt, imageFileName } = requestBody;
 
         if (!title || !description || !uploadAt) {
             return {
@@ -28,13 +27,14 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
+
         const params: AWS.DynamoDB.DocumentClient.PutItemInput = {
-            TableName: 'nelson-photo-gallery-table',
+            TableName: TABLE_NAME,
             Item: {
                 photoId: context.awsRequestId,
                 title,
                 description,
-                imageUrl,
+                imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/${imageFileName}`,
                 uploadAt
             },
         };

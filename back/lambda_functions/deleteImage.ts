@@ -2,6 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 
 const s3 = new AWS.S3();
+const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
   try {
@@ -18,10 +19,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     const imageBuffer = Buffer.from(base64Image, 'base64');
 
     const imageName = `${Date.now()}.png`;
-    const bucketName = 'nelson-images-2-bucket';
 
     const params: AWS.S3.Types.PutObjectRequest = {
-      Bucket: bucketName,
+      Bucket: BUCKET_NAME,
       Key: imageName,
       Body: imageBuffer,
       ContentType: 'image/png',

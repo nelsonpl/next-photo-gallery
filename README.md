@@ -14,5 +14,8 @@ yarn tsc
 
 sam package --template-file template.yaml --output-template-file packaged.yaml
 
-sam deploy --template-file packaged.yaml --stack-name nelson-functions --capabilities CAPABILITY_IAM
+sam deploy --template-file packaged.yaml --stack-name nelson-fullstackassignment-stack --capabilities CAPABILITY_IAM
 
+table name nelson-fullstackassignment-table-photos
+bucket name nelson-fullstackassignment-bucket
+stack name nelson-fullstackassignment-stack
