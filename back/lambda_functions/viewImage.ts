@@ -10,11 +10,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     if (!imageName) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: 'Parâmetro "imageName" ausente na consulta da URL' }),
+        body: JSON.stringify({ message: 'PAYLOAD_ERROR' }),
       };
     }
-
-    const bucketName = 'nelson-images-3-bucket';
 
     const params: AWS.S3.GetObjectRequest = {
       Bucket: BUCKET_NAME,
@@ -32,10 +30,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       }
     };
   } catch (error) {
-    console.error('Erro ao visualizar a imagem:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Erro ao visualizar a imagem' }),
+      body: JSON.stringify({ message: 'INTERNAL_ERROR' }),
     };
   }
 };

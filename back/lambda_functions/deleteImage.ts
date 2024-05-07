@@ -9,7 +9,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     if (!event.body) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: 'Corpo da requisição está vazio' }),
+        body: JSON.stringify({ message: 'INTERNAL_ERROR' }),
       };
     }
 
@@ -40,10 +40,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       }
     };
   } catch (error) {
-    console.error('Erro ao fazer upload da imagem:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Erro ao fazer upload da imagem' }),
+      body: JSON.stringify({ message: 'INTERNAL_ERROR' }),
     };
   }
 };

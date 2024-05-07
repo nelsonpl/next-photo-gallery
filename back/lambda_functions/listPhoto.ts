@@ -30,10 +30,9 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             }
         };
     } catch (error) {
-        console.error('Erro ao listar as fotos:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: 'Erro ao listar as fotos' })
+            body: JSON.stringify({ message: 'INTERNAL_ERROR' })
         };
     }
 };

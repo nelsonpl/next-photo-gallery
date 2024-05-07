@@ -12,7 +12,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     if (!data) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: "Arquivo não encontrado" })
+        body: JSON.stringify({ message: "PAYLOAD_ERROR" })
       };
     }
 
@@ -22,8 +22,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       Bucket: BUCKET_NAME,
       Key: filename,
       Body: data.content,
-      ContentType: data.contentType,
-      ACL: 'public-read'
+      ContentType: data.contentType
     }).promise();
 
     return {
@@ -39,7 +38,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
     console.error(err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: "Erro ao salvar a img" })
+      body: JSON.stringify({ message: "INTERNAL_ERROR" })
     };
   }
 };
