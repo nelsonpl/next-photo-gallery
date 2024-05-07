@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import ImageLazyLoad from './ImageLazyLoad';
 import Photo from '../interfaces/photo';
+import axios from 'axios';
 
 interface PhotoListParams {
   photos: Photo[];
 }
 
 const PhotoList: React.FC<PhotoListParams> = ({ photos }) => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+
   const [currentPage] = useState<number>(1);
   const [photosToShow, setPhotosToShow] = useState<number>(20);
 
@@ -17,9 +20,16 @@ const PhotoList: React.FC<PhotoListParams> = ({ photos }) => {
 
   const totalPhotos = photos.length;
 
-
   const handleLoadMore = () => {
     setPhotosToShow((prevPhotosToShow) => prevPhotosToShow + 20);
+  };
+
+  const handleDeletePhoto = async (photoId: string) => {
+    try {
+      await axios.delete(`/${apiUrl}/deletePhoto/${photoId}`);
+    } catch (error) {
+      console.error('Failed to delete photo:', error);
+    }
   };
 
   return (
@@ -34,6 +44,12 @@ const PhotoList: React.FC<PhotoListParams> = ({ photos }) => {
               <h2 className="text-xl font-semibold mb-2">{photo.title}</h2>
               <p className="text-gray-700 mb-2">{photo.description}</p>
               <p className="text-gray-500">{photo.uploadAt}</p>
+              <button
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mt-2"
+                onClick={() => handleDeletePhoto(photo.photoId)}
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
