@@ -3,14 +3,29 @@ Transform: AWS::Serverless-2016-10-31
 
 Globals:
   Api:
-    BinaryMediaTypes:
-      - "*~1*"
+    Cors: 
+      AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+      AllowOrigin: "'*'"
+      AllowCredentials: "'true'"
 
 Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      BinaryMediaTypes:
+            - "*~1*"
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+
   UploadImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/uploadImage.handler
+      Handler: build/lambda_functions/uploadImage.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -24,11 +39,13 @@ Resources:
           Properties:
             Path: /uploadImage
             Method: post
+            RestApiId:
+              Ref: ApiGatewayApi
 
   ViewImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/viewImage.handler
+      Handler: build/lambda_functions/viewImage.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -42,11 +59,13 @@ Resources:
           Properties:
             Path: /viewImage
             Method: get
+            # RestApiId:
+            #   Ref: ApiGatewayApi
 
   DeleteImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/deleteImage.handler
+      Handler: build/lambda_functions/deleteImage.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -60,11 +79,13 @@ Resources:
           Properties:
             Path: /deleteImage
             Method: delete
+            # RestApiId:
+            #   Ref: ApiGatewayApi
 
   SavePhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/savePhoto.handler
+      Handler: build/lambda_functions/savePhoto.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -79,11 +100,13 @@ Resources:
           Properties:
             Path: /savePhoto
             Method: post
+            # RestApiId:
+            #   Ref: ApiGatewayApi
 
   ListPhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/listPhoto.handler
+      Handler: build/lambda_functions/listPhoto.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -97,6 +120,8 @@ Resources:
           Properties:
             Path: /listPhoto
             Method: get
+            # RestApiId:
+            #   Ref: ApiGatewayApi
   
   ImageBucket:
     Type: AWS::S3::Bucket

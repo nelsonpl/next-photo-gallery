@@ -19,7 +19,8 @@ const Page: React.FC = async () => {
   return (
     <div>
       <FormUploadPhoto />
-      <PhotoList photos={photos} />
+      {photos?.length && <PhotoList photos={photos} />}
+
     </div>
   );
 };

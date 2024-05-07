@@ -1,8 +1,10 @@
 'use client'
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const FormUploadPhoto: React.FC = () => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    const apiUploadUrl = process.env.NEXT_PUBLIC_API_UPLOAD_URL || '';
 
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -34,26 +36,39 @@ const FormUploadPhoto: React.FC = () => {
             const formData = new FormData();
             formData.append('photo', file);
 
-            const uploadResponse = await fetch(`${apiUrl}/uploadImage`, {
+            const uploadResponse = await fetch(`${apiUploadUrl}/uploadImage`, {
                 method: 'POST',
                 body: formData,
             });
 
             const uploadData = await uploadResponse.json();
 
-            const saveResponse = await fetch(`${apiUrl}/savePhoto`, {
-                method: 'POST',
+            const saveResponse = await axios.post(`${apiUrl}/savePhoto`, {  
+                title,
+                description,
+                filename: uploadData.filename,
+            }, {
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    title,
-                    description,
-                    imageUrl: uploadData.imageUrl,
-                }),
+                }
+            
             });
 
-            if (saveResponse.ok) {
+            // console.log('uploadData', uploadData)
+
+            // const saveResponse = await fetch(`${apiUrl}/savePhoto`, {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({
+            //         title,
+            //         description,
+            //         filename: uploadData.filename,
+            //     }),
+            // });
+
+            if (saveResponse.status === 200) {
                 console.log('Photo saved successfully');
                 setTitle('');
                 setDescription('');

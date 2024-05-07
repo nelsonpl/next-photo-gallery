@@ -27,7 +27,10 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/${filename}` }),
+      body: JSON.stringify({
+        imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/${filename}`,
+        filename
+      }),
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'

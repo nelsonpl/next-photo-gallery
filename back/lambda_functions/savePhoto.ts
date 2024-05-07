@@ -3,7 +3,6 @@ import AWS from 'aws-sdk';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || '';
-const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
     try {
@@ -14,13 +13,13 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
-        const decodedBody = Buffer.from(event.body, 'base64').toString();
+        // const decodedBody = Buffer.from(event.body, 'base64').toString();
 
-        const requestBody = JSON.parse(decodedBody);
+        const requestBody = JSON.parse(event.body);
 
-        const { title, description, uploadAt, imageFileName } = requestBody;
+        const { title, description, filename } = requestBody;
 
-        if (!title || !description || !uploadAt) {
+        if (!title || !description || !filename) {
             return {
                 statusCode: 400,
                 body: JSON.stringify({ message: 'PAYLOAD_ERROR' }),
@@ -34,8 +33,8 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
                 photoId: context.awsRequestId,
                 title,
                 description,
-                imageUrl: `https://${BUCKET_NAME}.s3.amazonaws.com/${imageFileName}`,
-                uploadAt
+                filename,
+                uploadAt: new Date().toISOString(),
             },
         };
 
