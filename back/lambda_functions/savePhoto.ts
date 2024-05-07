@@ -13,8 +13,6 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
-        // const decodedBody = Buffer.from(event.body, 'base64').toString();
-
         const requestBody = JSON.parse(event.body);
 
         const { title, description, filename } = requestBody;

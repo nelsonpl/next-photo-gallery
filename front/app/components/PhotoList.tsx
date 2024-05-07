@@ -1,15 +1,7 @@
 'use client'
 import React, { useState } from 'react';
-import ImageLazyLoad from './imageLazyLoad';
-
-interface Photo {
-  uploadAt: string;
-  photoId: string;
-  imageUrl: string;
-  description: string;
-  title: string;
-  filename: string;
-}
+import ImageLazyLoad from './ImageLazyLoad';
+import Photo from '../interfaces/photo';
 
 interface PhotoListParams {
   photos: Photo[];

@@ -25,7 +25,7 @@ Resources:
   UploadImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/lambda_functions/uploadImage.handler
+      Handler: build/uploadImage.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -45,7 +45,7 @@ Resources:
   ViewImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/lambda_functions/viewImage.handler
+      Handler: build/viewImage.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -60,28 +60,10 @@ Resources:
             Path: /viewImage
             Method: get
 
-  DeleteImageFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: build/lambda_functions/deleteImage.handler
-      Runtime: nodejs20.x
-      Timeout: 120
-      Policies:
-        - AmazonS3FullAccess
-      Environment:
-        Variables:
-          BUCKET_NAME: nelson-fullstackassignment-bucket
-      Events:
-        DeleteImageApi:
-          Type: Api
-          Properties:
-            Path: /deleteImage
-            Method: delete
-
   SavePhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/lambda_functions/savePhoto.handler
+      Handler: build/savePhoto.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -100,7 +82,7 @@ Resources:
   ListPhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/lambda_functions/listPhoto.handler
+      Handler: build/listPhoto.handler
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
@@ -116,6 +98,25 @@ Resources:
             Path: /listPhoto
             Method: get
   
+  DeletePhotoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: build/deletePhoto.handler
+      Runtime: nodejs20.x
+      Timeout: 120
+      Policies:
+        - AmazonDynamoDBFullAccess 
+      Environment:
+        Variables:
+          TABLE_NAME: nelson-fullstackassignment-table-photos
+          BUCKET_NAME: nelson-fullstackassignment-bucket
+      Events:
+        DeletePhotoApi:
+          Type: Api
+          Properties:
+            Path: /deletePhoto/{photoId}
+            Method: delete
+
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:

@@ -1,16 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import PhotoList from './photoList';
-import FormUploadPhoto from './formUploadPhoto';
-
-interface Photo {
-  uploadAt: string;
-  photoId: string;
-  imageUrl: string;
-  description: string;
-  title: string;
-  filename: string;
-}
+import PhotoList from './components/PhotoList';
+import FormUploadPhoto from './components/PhotoForm';
+import Photo from './interfaces/photo';
 
 const Page: React.FC = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
