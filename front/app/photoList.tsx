@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import ImageLazyLoad from './imageLazyLoad';
 
 interface Photo {
   uploadAt: string;
@@ -7,6 +8,7 @@ interface Photo {
   imageUrl: string;
   description: string;
   title: string;
+  filename: string;
 }
 
 interface PhotoListParams {
@@ -14,61 +16,46 @@ interface PhotoListParams {
 }
 
 const PhotoList: React.FC<PhotoListParams> = ({ photos }) => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const photosPerPage = 20;
-  const indexOfLastPhoto = currentPage * photosPerPage;
-  const indexOfFirstPhoto = indexOfLastPhoto - photosPerPage;
+  const [currentPage] = useState<number>(1);
+  const [photosToShow, setPhotosToShow] = useState<number>(20);
+
+  const indexOfLastPhoto = currentPage * photosToShow;
+  const indexOfFirstPhoto = indexOfLastPhoto - photosToShow;
   const currentPhotos = photos.slice(indexOfFirstPhoto, indexOfLastPhoto);
 
-  const scrollToNextPage = () => {
-    setCurrentPage((prevPage) => (prevPage === Math.ceil(photos.length / photosPerPage) ? 1 : prevPage + 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const totalPhotos = photos.length;
 
-  const scrollToPrevPage = () => {
-    setCurrentPage((prevPage) => (prevPage === 1 ? Math.ceil(photos.length / photosPerPage) : prevPage - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const handleLoadMore = () => {
+    setPhotosToShow((prevPhotosToShow) => prevPhotosToShow + 20);
   };
 
   return (
     <div className="container mx-auto">
-      <h1 className="text-3xl font-semibold mb-4">Gallery of Photos</h1>
       <div className="mb-4">
-        <table className="table-auto w-full">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Image</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentPhotos.map((photo) => (
-              <tr key={photo.photoId}>
-                <td>{photo.title}</td>
-                <td>{photo.description}</td>
-                <td>
-                  <img src={photo.imageUrl} alt={photo.title} className="w-20 h-20 object-cover" />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {currentPhotos.map((photo) => (
+          <div key={photo.photoId} className="flex mb-8">
+            <div className="w-1/3 pr-4">
+              <ImageLazyLoad filename={photo.filename} />
+            </div>
+            <div className="w-2/3">
+              <h2 className="text-xl font-semibold mb-2">{photo.title}</h2>
+              <p className="text-gray-700 mb-2">{photo.description}</p>
+              <p className="text-gray-500">{photo.uploadAt}</p>
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="flex justify-between">
-        <button
-          className="bg-gray-200 px-3 py-1 rounded-full"
-          onClick={scrollToPrevPage}
-        >
-          Previous
-        </button>
-        <button
-          className="bg-gray-200 px-3 py-1 rounded-full"
-          onClick={scrollToNextPage}
-        >
-          Next
-        </button>
-      </div>
+      {photosToShow < totalPhotos && (
+        <div className="flex justify-center mb-4">
+          <button
+            className="bg-gray-200 px-4 py-2 rounded-full"
+            onClick={handleLoadMore}
+          >
+            Load more...
+          </button>
+        </div>
+      )}
     </div>
   );
 };

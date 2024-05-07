@@ -30,13 +30,17 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             };
         }
 
+        console.log('data.Items', data.Items)
+
         const photos = await Promise.all(data.Items.map(async (item) => {
-            const imageUrl = await getSignedUrl(item.filename);
+            const imageUrl = await getSignedUrl({ key: item.filename, bucket: process.env.BUCKET_NAME || '' });
             return {
                 ...item,
                 imageUrl
             };
         }));
+
+        console.log('photos', photos)
 
         return {
             statusCode: 200,
@@ -50,6 +54,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
             }
         };
     } catch (error) {
+        console.error(error)
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'INTERNAL_ERROR' })

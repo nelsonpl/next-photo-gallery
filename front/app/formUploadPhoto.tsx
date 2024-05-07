@@ -1,14 +1,18 @@
-'use client'
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const FormUploadPhoto: React.FC = () => {
+interface FormUploadPhotoProps {
+    onPhotoUploaded: () => void;
+}
+
+const FormUploadPhoto: React.FC<FormUploadPhotoProps> = ({ onPhotoUploaded }) => {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
     const apiUploadUrl = process.env.NEXT_PUBLIC_API_UPLOAD_URL || '';
 
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [file, setFile] = useState<File | null>(null);
+    const [uploading, setUploading] = useState<boolean>(false);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -33,6 +37,8 @@ const FormUploadPhoto: React.FC = () => {
         }
 
         try {
+            setUploading(true);
+
             const formData = new FormData();
             formData.append('photo', file);
 
@@ -43,7 +49,7 @@ const FormUploadPhoto: React.FC = () => {
 
             const uploadData = await uploadResponse.json();
 
-            const saveResponse = await axios.post(`${apiUrl}/savePhoto`, {  
+            const saveResponse = await axios.post(`${apiUrl}/savePhoto`, {
                 title,
                 description,
                 filename: uploadData.filename,
@@ -51,53 +57,48 @@ const FormUploadPhoto: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 }
-            
+
             });
-
-            // console.log('uploadData', uploadData)
-
-            // const saveResponse = await fetch(`${apiUrl}/savePhoto`, {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         title,
-            //         description,
-            //         filename: uploadData.filename,
-            //     }),
-            // });
 
             if (saveResponse.status === 200) {
                 console.log('Photo saved successfully');
                 setTitle('');
                 setDescription('');
                 setFile(null);
+                onPhotoUploaded();
+
+                const inputFile = document.getElementById('inputFile') as HTMLInputElement;
+                inputFile.value = '';
             } else {
                 console.error('Failed to save photo');
             }
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setFile(null)
+            setUploading(false);
         }
     };
 
     return (
-        <div>
-            <h2>Upload Photo</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Title:</label>
-                    <input type="text" value={title} onChange={handleTitleChange} />
+        <div className="container mx-auto mt-8 mb-4">
+            <h2 className="text-2xl font-semibold mb-4">Upload Photo</h2>
+            <form onSubmit={handleSubmit} className="w-full max-w-sm">
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Title:</label>
+                    <input type="text" value={title} onChange={handleTitleChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <div>
-                    <label>Description:</label>
-                    <input type="text" value={description} onChange={handleDescriptionChange} />
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                    <input type="text" value={description} onChange={handleDescriptionChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <div>
-                    <label>Photo:</label>
-                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Photo:</label>
+                    <input id="inputFile" type="file" accept="image/*" onChange={handleFileChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                 </div>
-                <button type="submit">Upload</button>
+                <button type="submit" className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={uploading}>
+                    {uploading ? 'Uploading...' : 'Upload'}
+                </button>
             </form>
         </div>
     );

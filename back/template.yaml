@@ -32,7 +32,7 @@ Resources:
         - AmazonS3FullAccess
       Environment:
         Variables:
-          BUCKET_NAME: BUCKET_NAME
+          BUCKET_NAME: nelson-fullstackassignment-bucket
       Events:
         UploadImageApi:
           Type: Api
@@ -52,15 +52,13 @@ Resources:
         - AmazonS3ReadOnlyAccess
       Environment:
         Variables:
-          BUCKET_NAME: BUCKET_NAME
+          BUCKET_NAME: nelson-fullstackassignment-bucket
       Events:
         ViewImageApi:
           Type: Api
           Properties:
             Path: /viewImage
             Method: get
-            # RestApiId:
-            #   Ref: ApiGatewayApi
 
   DeleteImageFunction:
     Type: AWS::Serverless::Function
@@ -72,15 +70,13 @@ Resources:
         - AmazonS3FullAccess
       Environment:
         Variables:
-          BUCKET_NAME: BUCKET_NAME
+          BUCKET_NAME: nelson-fullstackassignment-bucket
       Events:
         DeleteImageApi:
           Type: Api
           Properties:
             Path: /deleteImage
             Method: delete
-            # RestApiId:
-            #   Ref: ApiGatewayApi
 
   SavePhotoFunction:
     Type: AWS::Serverless::Function
@@ -92,16 +88,14 @@ Resources:
         - AmazonDynamoDBFullAccess 
       Environment:
         Variables:
-          TABLE_NAME: TABLE_NAME
-          BUCKET_NAME: BUCKET_NAME
+          TABLE_NAME: nelson-fullstackassignment-table-photos
+          BUCKET_NAME: nelson-fullstackassignment-bucket
       Events:
         SavePhotoApi:
           Type: Api
           Properties:
             Path: /savePhoto
             Method: post
-            # RestApiId:
-            #   Ref: ApiGatewayApi
 
   ListPhotoFunction:
     Type: AWS::Serverless::Function
@@ -113,25 +107,24 @@ Resources:
         - AmazonDynamoDBFullAccess 
       Environment:
         Variables:
-          TABLE_NAME: TABLE_NAME
+          TABLE_NAME: nelson-fullstackassignment-table-photos
+          BUCKET_NAME: nelson-fullstackassignment-bucket
       Events:
         ListPhotoApi:
           Type: Api
           Properties:
             Path: /listPhoto
             Method: get
-            # RestApiId:
-            #   Ref: ApiGatewayApi
   
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: BUCKET_NAME
+      BucketName: nelson-fullstackassignment-bucket
 
   PhotosTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: TABLE_NAME
+      TableName: nelson-fullstackassignment-table-photos
       AttributeDefinitions:
         - AttributeName: photoId
           AttributeType: S
@@ -144,4 +137,4 @@ Resources:
 
 Outputs:
   ImageBucketName:
-    Value: BUCKET_NAME
+    Value: nelson-fullstackassignment-bucket

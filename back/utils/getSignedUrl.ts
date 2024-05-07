@@ -1,13 +1,17 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 
 const s3 = new AWS.S3();
-const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
-export const getSignedUrl = async (imageName: string) => {
+interface GetSignedUrlParams {
+  key: string;
+  bucket: string;
+}
+
+export const getSignedUrl = async ({ key, bucket }: GetSignedUrlParams) => {
+  console.log('getSignedUrl', key, bucket);
   const params: AWS.S3.GetObjectRequest = {
-    Bucket: BUCKET_NAME,
-    Key: imageName,
+    Bucket: bucket,
+    Key: key,
   };
 
   const signedUrl = await s3.getSignedUrlPromise('getObject', params);
