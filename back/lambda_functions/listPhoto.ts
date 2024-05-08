@@ -6,28 +6,28 @@ const TABLE_NAME = process.env.TABLE_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context) => {
     try {
+        const pageSize = 20;
+        const queryParams = event.queryStringParameters || {};
+        let exclusiveStartKey = queryParams.lastEvaluatedKey ? JSON.parse(queryParams.lastEvaluatedKey) : null;
 
         const params: AWS.DynamoDB.DocumentClient.ScanInput = {
             TableName: TABLE_NAME,
+            Limit: pageSize,
+            ExclusiveStartKey: exclusiveStartKey
         };
 
         const data = await dynamoDB.scan(params).promise();
 
-        if (!data.Items) {
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ photos: [] }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
-                }
-            };
+        let lastEvaluatedKey = null;
+        if (data.LastEvaluatedKey) {
+            lastEvaluatedKey = encodeURIComponent(JSON.stringify(data.LastEvaluatedKey));
         }
 
         return {
             statusCode: 200,
             body: JSON.stringify({
-                photos: data.Items,
+                photos: data.Items || [],
+                lastEvaluatedKey
             }),
             headers: {
                 'Content-Type': 'application/json',
