@@ -2,9 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import AWS from 'aws-sdk';
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const s3 = new AWS.S3();
 const TABLE_NAME = process.env.TABLE_NAME || '';
-const BUCKET_NAME = process.env.BUCKET_NAME || '';
 
 export const handler: APIGatewayProxyHandler = async (event, context): Promise<any> => {
     try {
@@ -13,6 +11,10 @@ export const handler: APIGatewayProxyHandler = async (event, context): Promise<a
             return {
                 statusCode: 400,
                 body: JSON.stringify({ message: 'PHOTO_ID_REQUIRED' }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }
             };
         }
 
@@ -27,16 +29,9 @@ export const handler: APIGatewayProxyHandler = async (event, context): Promise<a
 
         const { Item } = await dynamoDB.get(params).promise();
 
-        if (!Item || !Item.filename) {
+        if (!Item) {
             throw new Error('Photo not found');
         }
-
-        const s3Params: AWS.S3.DeleteObjectRequest = {
-            Bucket: BUCKET_NAME,
-            Key: Item.filename
-        };
-
-        await s3.deleteObject(s3Params).promise();
 
         const deleteParams: AWS.DynamoDB.DocumentClient.DeleteItemInput = {
             TableName: TABLE_NAME,
@@ -47,12 +42,24 @@ export const handler: APIGatewayProxyHandler = async (event, context): Promise<a
 
         await dynamoDB.delete(deleteParams).promise();
 
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'OK' }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        };
 
     } catch (error) {
         console.log(error)
         return {
             statusCode: 500,
             body: JSON.stringify({ message: 'INTERNAL_ERROR' }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
         };
     }
 };

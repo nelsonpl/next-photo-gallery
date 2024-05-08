@@ -22,6 +22,10 @@ const Page: React.FC = () => {
     fetchPhotos();
   };
 
+  const handlePhotoDeleted = () => {
+    fetchPhotos();
+  };
+
   useEffect(() => {
     fetchPhotos();
   }, []);
@@ -29,7 +33,7 @@ const Page: React.FC = () => {
   return (
     <div>
       <FormUploadPhoto onPhotoUploaded={handlePhotoUploaded} />
-      {photos.length > 0 && <PhotoList photos={photos} />}
+      {photos.length > 0 && <PhotoList photos={photos} onPhotoDeleted={handlePhotoDeleted} />}
     </div>
   );
 };
