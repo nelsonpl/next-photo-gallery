@@ -3,16 +3,15 @@ import React, { useEffect, useState } from 'react';
 import PhotoList from './components/PhotoList';
 import FormUploadPhoto from './components/PhotoForm';
 import Photo from './interfaces/photo';
+import { list } from './services/photoService';
 
 const Page: React.FC = () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
   const [photos, setPhotos] = useState<Photo[]>([]);
 
   const fetchPhotos = async () => {
     try {
-      const response = await fetch(`${apiUrl}/listPhoto`);
-      const data = await response.json();
-      setPhotos(data.photos);
+      const data = await list();
+      setPhotos(data);
     } catch (error) {
       console.error('Error fetching photos:', error);
     }

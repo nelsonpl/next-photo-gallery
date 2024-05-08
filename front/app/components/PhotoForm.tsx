@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { save } from '../services/photoService';
+import { upload } from '../services/imageService';
 
 interface FormUploadPhotoProps {
     onPhotoUploaded: () => void;
 }
 
 const FormUploadPhoto: React.FC<FormUploadPhotoProps> = ({ onPhotoUploaded }) => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-    const apiUploadUrl = process.env.NEXT_PUBLIC_API_UPLOAD_URL || '';
-
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [file, setFile] = useState<File | null>(null);
@@ -39,39 +37,22 @@ const FormUploadPhoto: React.FC<FormUploadPhotoProps> = ({ onPhotoUploaded }) =>
         try {
             setUploading(true);
 
-            const formData = new FormData();
-            formData.append('photo', file);
+            const uploadData = await upload(file);
 
-            const uploadResponse = await fetch(`${apiUploadUrl}/uploadImage`, {
-                method: 'POST',
-                body: formData,
-            });
-
-            const uploadData = await uploadResponse.json();
-
-            const saveResponse = await axios.post(`${apiUrl}/savePhoto`, {
+            await save({
                 title,
                 description,
                 filename: uploadData.filename,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-
             });
 
-            if (saveResponse.status === 200) {
-                console.log('Photo saved successfully');
-                setTitle('');
-                setDescription('');
-                setFile(null);
-                onPhotoUploaded();
+            console.log('Photo saved successfully');
+            setTitle('');
+            setDescription('');
+            setFile(null);
+            onPhotoUploaded();
 
-                const inputFile = document.getElementById('inputFile') as HTMLInputElement;
-                inputFile.value = '';
-            } else {
-                console.error('Failed to save photo');
-            }
+            const inputFile = document.getElementById('inputFile') as HTMLInputElement;
+            inputFile.value = '';
         } catch (error) {
             console.error('Error:', error);
         } finally {
