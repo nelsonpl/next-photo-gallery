@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { get } from '../services/imageService';
 
 interface ImageLazyLoadProps {
     filename: string;
@@ -10,11 +11,8 @@ const ImageLazyLoad: React.FC<ImageLazyLoadProps> = ({ filename }) => {
     useEffect(() => {
         const fetchImage = async () => {
             try {
-                const response = await fetch(`https://k4nqmchcm5.execute-api.us-east-2.amazonaws.com/Prod/viewImage?imageName=${filename}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch image');
-                }
-                setImageUrl((await response.json()).imageUrl);
+                const url = await get(filename);
+                setImageUrl(url);
             } catch (error) {
                 console.error('Error loading image:', error);
             }
