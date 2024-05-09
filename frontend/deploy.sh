@@ -1,30 +1,13 @@
-#!/bin/bash
-
-if [ -z "$STACK_NAME" ]; then
-  echo "ERROR: STACK_NAME variable is not set. Please set it before running this script."
+# Check if environment variables are set
+if [ -z "$S3_BUCKET_NAME" ]; then
+  echo "Error: Environment variables are not properly configured."
   exit 1
 fi
 
-region=${REGION:-us-west-2}
+# Build the React/Next.js project
+echo "Building the project..."
+npm run build
 
-
-target_origin_id="${STACK_NAME}-target"
-
-bucket_name="${STACK_NAME}-bucket-front"
-
-echo "Building frontend..."
-yarn build
-
-echo "Creating S3 bucket..."
-aws s3api create-bucket --bucket "$bucket_name" --region "$region"
-
-echo "Uploading files to S3 bucket..."
-aws s3 sync ./dist "s3://$bucket_name"
-
-echo "Creating CloudFront distribution..."
-distribution_id=$(aws cloudfront create-distribution --distribution-config file://cloudfront-config.json --region "$region" | jq -r '.Distribution.Id')
-
-echo "Distribution Id: $distribution_id"
-echo "Deployment complete!"
-echo "You can access your frontend at:"
-echo "http://$distribution_id.cloudfront.net"
+# Sync built files with S3 bucket
+echo "Syncing files with S3 bucket..."
+aws s3 sync .dist s3://$S3_BUCKET_NAME

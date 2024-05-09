@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
-    distDir: 'dist',
+    distDir: '.dist',
+    reactStrictMode: true,
 };
 
 export default nextConfig;
