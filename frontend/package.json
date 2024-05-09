@@ -5,7 +5,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "next build && bash deploy.sh"
+    "deploy": "bash deploy.sh"
   },
   "dependencies": {
     "axios": "^1.6.8",

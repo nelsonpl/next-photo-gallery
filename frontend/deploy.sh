@@ -7,9 +7,10 @@ fi
 
 region=${REGION:-us-west-2}
 
+
 target_origin_id="${STACK_NAME}-target"
 
-bucket_name="${STACK_NAME}-bucket"
+bucket_name="${STACK_NAME}-bucket-front"
 
 echo "Building frontend..."
 yarn build
@@ -23,6 +24,7 @@ aws s3 sync ./dist "s3://$bucket_name"
 echo "Creating CloudFront distribution..."
 distribution_id=$(aws cloudfront create-distribution --distribution-config file://cloudfront-config.json --region "$region" | jq -r '.Distribution.Id')
 
+echo "Distribution Id: $distribution_id"
 echo "Deployment complete!"
 echo "You can access your frontend at:"
-echo "https://${distribution_id}.cloudfront.net"
+echo "http://$distribution_id.cloudfront.net"
