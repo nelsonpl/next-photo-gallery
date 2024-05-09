@@ -240,8 +240,11 @@ $RECYCLE.BIN/
 # Build folder
 
 */build/*
+*/node_modules/*
 
 # End of https://www.gitignore.io/api/osx,linux,python,windows,pycharm,visualstudiocode
 /node_modules
-/back/node_modules
-/back/packaged.yaml
+/backend/node_modules
+/frontend/node_modules
+/backend/packaged.yaml
+
