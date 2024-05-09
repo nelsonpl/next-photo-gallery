@@ -25,7 +25,7 @@ const ImageLazyLoad: React.FC<ImageLazyLoadProps> = ({ filename }) => {
                 URL.revokeObjectURL(imageUrl);
             }
         };
-    }, [filename]);
+    }, [filename, imageUrl]);
 
     return (
         <div className="w-full">

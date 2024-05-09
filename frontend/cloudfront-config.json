@@ -1,0 +1,20 @@
+{
+    "CallerReference": "my-unique-id",
+    "DefaultCacheBehavior": {
+      "TargetOriginId": "<origin-id>",
+      "ForwardedValues": {
+        "QueryString": false
+      }
+    },
+    "Enabled": true,
+    "Origins": {
+      "Quantity": 1,
+      "Items": [
+        {
+          "Id": "<origin-id>",
+          "DomainName": "<nome-do-seu-bucket>.s3.amazonaws.com"
+        }
+      ]
+    }
+  }
+  
