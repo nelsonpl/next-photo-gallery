@@ -25,19 +25,19 @@ Resources:
   UploadImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/uploadImage.handler
+      Handler: dist/controllers/mediaController.upload
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
         - AmazonS3FullAccess
       Environment:
         Variables:
-          BUCKET_NAME: nelson-fullstackassignment-bucket
+          BUCKET_NAME: nelson-fullstackassignment-stack-bucket
       Events:
         UploadImageApi:
           Type: Api
           Properties:
-            Path: /uploadImage
+            Path: /media
             Method: post
             RestApiId:
               Ref: ApiGatewayApi
@@ -45,87 +45,87 @@ Resources:
   ViewImageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/viewImage.handler
+      Handler: dist/controllers/mediaController.view
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
         - AmazonS3ReadOnlyAccess
       Environment:
         Variables:
-          BUCKET_NAME: nelson-fullstackassignment-bucket
+          BUCKET_NAME: nelson-fullstackassignment-stack-bucket
       Events:
         ViewImageApi:
           Type: Api
           Properties:
-            Path: /viewImage
+            Path: /media/{filename}
             Method: get
 
   SavePhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/savePhoto.handler
+      Handler: dist/controllers/photoController.save
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
         - AmazonDynamoDBFullAccess 
       Environment:
         Variables:
-          TABLE_NAME: nelson-fullstackassignment-table-photos
-          BUCKET_NAME: nelson-fullstackassignment-bucket
+          TABLE_NAME: nelson-fullstackassignment-stack-table-photos
+          BUCKET_NAME: nelson-fullstackassignment-stack-bucket
       Events:
         SavePhotoApi:
           Type: Api
           Properties:
-            Path: /savePhoto
+            Path: /photo
             Method: post
 
   ListPhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/listPhoto.handler
+      Handler: dist/controllers/photoController.list
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
         - AmazonDynamoDBFullAccess 
       Environment:
         Variables:
-          TABLE_NAME: nelson-fullstackassignment-table-photos
-          BUCKET_NAME: nelson-fullstackassignment-bucket
+          TABLE_NAME: nelson-fullstackassignment-stack-table-photos
+          BUCKET_NAME: nelson-fullstackassignment-stack-bucket
       Events:
         ListPhotoApi:
           Type: Api
           Properties:
-            Path: /listPhoto
+            Path: /photo
             Method: get
   
   DeletePhotoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: build/deletePhoto.handler
+      Handler: dist/controllers/photoController.del
       Runtime: nodejs20.x
       Timeout: 120
       Policies:
         - AmazonDynamoDBFullAccess 
       Environment:
         Variables:
-          TABLE_NAME: nelson-fullstackassignment-table-photos
-          BUCKET_NAME: nelson-fullstackassignment-bucket
+          TABLE_NAME: nelson-fullstackassignment-stack-table-photos
+          BUCKET_NAME: nelson-fullstackassignment-stack-bucket
       Events:
         DeletePhotoApi:
           Type: Api
           Properties:
-            Path: /deletePhoto/{photoId}
+            Path: /photo/{photoId}
             Method: delete
 
   ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: nelson-fullstackassignment-bucket
+      BucketName: nelson-fullstackassignment-stack-bucket
 
   PhotosTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: nelson-fullstackassignment-table-photos
+      TableName: nelson-fullstackassignment-stack-table-photos
       AttributeDefinitions:
         - AttributeName: photoId
           AttributeType: S
@@ -138,4 +138,4 @@ Resources:
 
 Outputs:
   ImageBucketName:
-    Value: nelson-fullstackassignment-bucket
+    Value: nelson-fullstackassignment-stack-bucket

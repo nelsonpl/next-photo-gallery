@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import axios from 'axios';
+import { del } from '../services/photoService';
 
 interface PhotoListParams {
   photoId: string;
@@ -15,7 +15,7 @@ const BtnPhotoDelete: React.FC<PhotoListParams> = ({ photoId, onPhotoDeleted }) 
     setLoading(true);
 
     try {
-      await axios.delete(`${apiUrl}/deletePhoto/${photoId}`);
+      await del(photoId);
       onPhotoDeleted();
     } catch (error) {
       console.error('Failed to delete photo:', error);

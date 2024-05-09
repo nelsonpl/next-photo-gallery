@@ -6,11 +6,11 @@ export const upload = async (file: File) => {
     const formData = new FormData();
     formData.append('photo', file);
 
-    const { data } = await axios.post(`${apiUploadUrl}/uploadImage`, formData);
+    const { data } = await axios.post(`${apiUploadUrl}/media`, formData);
     return data;
 };
 
 export const get = async (filename: string) => {
-    const { data } = await axios.get(`${apiUrl}/viewImage?imageName=${filename}`);
-    return data.imageUrl;
+    const { data } = await axios.get(`${apiUrl}/media/${filename}`);
+    return data.url;
 }
