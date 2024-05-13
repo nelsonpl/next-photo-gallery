@@ -1,4 +1,4 @@
-# Project Name: Photo Gallery Frontend
+# Photo Gallery Frontend
 
 ## Description
 Front is a Next.js and React-based project for creating a dynamic photo gallery. It leverages Next.js for server-side rendering and React for building interactive user interfaces. The project uses Axios for making HTTP requests, enabling seamless communication with backend services. Additionally, it utilizes Tailwind CSS for efficient styling and responsive design.
