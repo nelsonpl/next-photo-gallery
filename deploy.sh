@@ -10,4 +10,4 @@ npm run build
 
 # Sync built files with S3 bucket
 echo "Syncing files with S3 bucket..."
-aws s3 sync .next s3://$S3_BUCKET_NAME
+aws s3 sync out s3://$S3_BUCKET_NAME
