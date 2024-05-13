@@ -25,6 +25,7 @@ const Page: React.FC = () => {
   }, []);
 
   const handlePhotoUploaded = () => {
+    setPhotos([]);
     fetchPhotos();
   };
 
@@ -33,6 +34,7 @@ const Page: React.FC = () => {
   };
 
   const handleDeletePhoto = () => {
+    setPhotos([]);
     fetchPhotos();
   };
 
